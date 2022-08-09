@@ -1,0 +1,26 @@
+ if (cont[5] != "user" && !is_machine()) {
+                console.log(is_machine());
+                let split = cont[6].split('=')
+                let x = parseInt(split[0]);
+                let y = parseInt(split[1]);
+                testBoard[x][y] = player;
+                clearBoard(testBoard);
+                if (invalidTestBoard() || invalidMove(x, y)) {
+                    showInvalidMove(x, y);
+                    copyBoard(testBoard, board);
+                    resetCheckBoard();
+                    clicks = 0;
+                } else { //Valid move
+                    historyBoards.push(JSON.parse(JSON.stringify(backupBoard.slice(0))));
+                    copyBoard(backupBoard, board);
+                    copyBoard(board, testBoard);
+                    updateGameBy(board);
+                    $(this).addClass(player === 0 ? 'black' : 'white');
+                    $(this).removeClass('hide');
+                }
+                player === 0 ? player++ : player--;
+                document.getElementById('username').value = updateBoard(board);
+                paintBoard();
+                playclick(cont);
+                document.getElementById('play').click();
+            }
