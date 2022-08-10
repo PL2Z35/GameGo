@@ -62,7 +62,6 @@ six==1.14.0
 socketio==0.2.1
 systemd-python==234
 toml==0.10.2
-ufw==0.36
 unattended-upgrades==0.1
 urllib3==1.25.8
 usb-creator==0.3.7
