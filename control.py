@@ -3,10 +3,10 @@ from flask import session
 import mysql.connector
 
 mysql = mysql.connector.connect(
-    host='localhost',
-    user='root',
-    password='',
-    database='gameGo'
+    host='biwwypmdqg9rewll8s5n-mysql.services.clever-cloud.com',
+    user='un5x4r8rb2vxim86',
+    password='ORHVSyxjzUN3ifUDFY4I',
+    database='biwwypmdqg9rewll8s5n'
 )
 
 cur = mysql.cursor()
