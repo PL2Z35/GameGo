@@ -22,5 +22,13 @@ create table game (
     primary key (id)
 );
 
+create table move(
+    id int not null auto_increment,
+    id_code int not null,
+    board varchar(1000),
+    primary key(id)
+)
+
 alter table game add foreign key (player1) references user(id);
 alter table game add foreign key (player2) references user(id);
+alter table move add foreign key (id_code) references game(id);

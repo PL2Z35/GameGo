@@ -110,6 +110,10 @@ def add_game_machine(code, id1, id2, table):
                 (code, id1, id2, table,))
     mysql.commit()
 
+def add_move(code, board):
+    cur.execute("INSERT INTO move (id_code, board) values (%s,%s)" ,(code, board))
+    mysql.commit()
+
 
 def logout(iduser):
     cur.execute("UPDATE user SET active = 0 WHERE id = %s", (iduser,))

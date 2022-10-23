@@ -113,6 +113,7 @@ def handle_message(msg):
     board = msg.split('-')
     control.update_board(session['code'], board[0])
     control.update_pass(session['code'], board[2])
+    control.add_move(session['code'], board[0])
     game = control.get_game(session['code'])
     try:
         player2 = control.get_user_id(game[4])

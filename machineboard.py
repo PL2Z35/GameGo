@@ -1,6 +1,5 @@
 import random
 
-
 def generate_move(board, typeboard, player):
     aux = analitic_move(board, typeboard, player).split("=")
     return str(aux[0])+"="+str(aux[1])
