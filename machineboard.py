@@ -1,16 +1,31 @@
 import random
+from typing import List
 import control
 
 def generate_move(list,board, typeboard, player):
     aux = analitic_move(list, board, typeboard, player).split("=")
+    print(aux)
     return str(aux[0])+"="+str(aux[1])
 
 
 def analitic_move(list, board, typeboard, player):
+    print("MOVIMIENTO A REALIZAR")
+    auxList = str(list).split(",")
+    if len(auxList) > 1:
+        list = str(list).replace(",a","")
+        newBoard = generate_board(list, typeboard)
+        boardaux = generate_board(board, typeboard)
+        print(newBoard)
+        result = compare_boards(newBoard, boardaux, typeboard)
+        auxList = str(result).split("=")
+        boardtext = str(board).replace(" ", "")
+        boardtext = str(boardtext).replace("[", "")
+        boardtext = str(boardtext).replace("]", "")
+        boardtext = str(boardtext).replace("'", "")
+        return str(auxList[0])+"="+str(auxList[1])+"-"+boardtext
     boardaux = generate_board(board, typeboard)
     aux = generate_random_move(board,boardaux, typeboard, player).split("=")
     return str(aux[0])+"="+str(aux[1])
-
 
 def generate_board(board, typeboard):
     boardaux = []
@@ -38,6 +53,14 @@ def suicide(board, x, y, player, typeboard):
 def generate_random(i, j):
     return random.randint(i, j-1)
 
+def compare_boards(board1, board2, typeboard):
+    list = ""
+    for i in range(0, int(typeboard)):
+        for j in range(0, int(typeboard)):
+            if(int(board1[i][j]) != int(board2[i][j])):
+                list = (str(i)+"="+str(j))
+                break
+    return str(list)
 
 def generate_random_move(boardtext,board, typeboard, player):
     x = 0

@@ -110,11 +110,7 @@ def conn_game():
 def compare_move(boardText):
     print(session['code'])
     lista = control.equals_board(boardText, session['code'])
-    ##listb = control.equals_board(boardText, session['code'])
     boardText = boardText+","
-    print("******************************")
-    print(boardText)
-    print("******************************")
     print("==============================")
     for code in lista:
         aux = str(code).replace("(", "")
@@ -122,13 +118,12 @@ def compare_move(boardText):
         aux = str(aux).replace(",", "")
         result =  board_disponible(aux, boardText, control.move_id(aux))
         if str(result)!="nada":
-            print(result)
-    print("==============================")
+            return (result+"a")
+    return "nada"
 
 
 def board_disponible(code, boardText, lista):
     cont = 0
-    posible = ""
     for board in lista:
         aux = str(board).replace("(", "")
         aux = str(aux).replace(")", "")
@@ -151,9 +146,8 @@ def handle_message(msg):
     try:
         player2 = control.get_user_id(game[4])
         if control.is_player1(session['code'], session['id']) and player2[1].split('=')[0] == 'machine':
-            compare_move(game[2])
             move = machineboard.generate_move(
-                session['code'], game[2], game[6], 1).split("-")
+                compare_move(game[2]), game[2], game[6], 1).split("-")
             control.add_move(session['code'], move[1], machineboard.total_moves(control.is_player1(
                 session['code'], session['id']), control.get_game_moves(session['code']), game[2]))
             send(game[2]+"-"+board[1]+'-'+str(session['code']) +
