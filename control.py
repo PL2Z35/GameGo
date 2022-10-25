@@ -3,10 +3,10 @@ from flask import session
 import mysql.connector
 
 mysql = mysql.connector.connect(
-    host='bzak9i8w15owuzwncj7g-mysql.services.clever-cloud.com',
-    user='u8637lpbax4fmbnc',
-    password='yILnKFzBzc4rrmiuXLOe',
-    database='bzak9i8w15owuzwncj7g'
+    host='localhost',
+    user='root',
+    password='',
+    database='gamego'
 )
 
 cur = mysql.cursor()
@@ -44,6 +44,10 @@ def get_game_player1(code, iduser):
         "SELECT * FROM game WHERE player1 = %s and code = %s", (iduser, code))
     game = cur.fetchone()
     return game
+
+def get_game_moves(code):
+    cur.execute("SELECT board FROM move WHERE id_code = %s", (code,))
+    return list(cur);
 
 
 def get_game_player2(code, iduser):
@@ -110,10 +114,17 @@ def add_game_machine(code, id1, id2, table):
                 (code, id1, id2, table,))
     mysql.commit()
 
-def add_move(code, board):
-    cur.execute("INSERT INTO move (id_code, board) values (%s,%s)" ,(code, board))
+def add_move(code,board,type):
+    cur.execute("INSERT INTO move (id_code,board,type) values (%s,%s,%s)" ,(code, board,type))
     mysql.commit()
 
+def move_id(code):
+    cur.execute("SELECT board FROM move WHERE id_code = %s", (code,))
+    return list(cur);
+
+def equals_board(board, code):
+    cur.execute("(SELECT id_code FROM move WHERE id_code!=%s and board = %s);", (code,board,))
+    return list(cur);
 
 def logout(iduser):
     cur.execute("UPDATE user SET active = 0 WHERE id = %s", (iduser,))

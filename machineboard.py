@@ -1,13 +1,14 @@
 import random
+import control
 
-def generate_move(board, typeboard, player):
-    aux = analitic_move(board, typeboard, player).split("=")
+def generate_move(list,board, typeboard, player):
+    aux = analitic_move(list, board, typeboard, player).split("=")
     return str(aux[0])+"="+str(aux[1])
 
 
-def analitic_move(board, typeboard, player):
+def analitic_move(list, board, typeboard, player):
     boardaux = generate_board(board, typeboard)
-    aux = generate_random_move(boardaux, typeboard, player).split("=")
+    aux = generate_random_move(board,boardaux, typeboard, player).split("=")
     return str(aux[0])+"="+str(aux[1])
 
 
@@ -38,12 +39,47 @@ def generate_random(i, j):
     return random.randint(i, j-1)
 
 
-def generate_random_move(board, typeboard, player):
+def generate_random_move(boardtext,board, typeboard, player):
     x = 0
     y = 0
     while True:
         x = generate_random(0, int(typeboard))
         y = generate_random(0, int(typeboard))
         if is_valid_move(board, x, y, player, typeboard):
+            board[x][y]=1
             break
-    return str(x)+"="+str(y)
+    boardtext = str(board).replace(" ", "")
+    boardtext = str(boardtext).replace("[", "")
+    boardtext = str(boardtext).replace("]", "")
+    boardtext = str(boardtext).replace("'", "")
+    return str(x)+"="+str(y)+"-"+boardtext
+
+
+def total_moves(player,moves, actual_board):
+    end = "";
+    for i in range(0, int(len(moves))):
+        end = moves[i];
+        if i == int(len(moves))-1:
+            end = moves[i-1]
+    opc1 = str(end).count("0")
+    opc2 = str(end).count("1")
+    act1 = str(actual_board).count("0")
+    act2 = str(actual_board).count("1")
+    if(player==True):
+        contAnt= int(opc1) - int(opc2)
+        contAct = int(act1) - int(act2)
+        if (int(contAct) > int(contAnt)):
+            return "good"
+        if (int(contAct) == int(contAnt)):
+            return "acceptable"
+        if (int(contAct) < int(contAnt)):
+            return "bad"
+    else:
+        contAnt= int(opc2) - int(opc1)
+        contAct = int(act2) - int(act1)
+        if (int(contAct) > int(contAnt)):
+            return "good"
+        if (int(contAct) == int(contAnt)):
+            return "acceptable"
+        if (int(contAct) < int(contAnt)):
+            return "bad"

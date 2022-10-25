@@ -32,7 +32,6 @@ def new_game():
             control.signin(user[0], username, code, table, user[1], '')
             print(user)
             control.add_game(code, user[0], table)
-            print("ashdgvasghjdh")
             return redirect(control.route_game())
         else:
             return redirect('/')
@@ -108,19 +107,57 @@ def conn_game():
         return redirect('/')
 
 
+def compare_move(boardText):
+    print(session['code'])
+    lista = control.equals_board(boardText, session['code'])
+    ##listb = control.equals_board(boardText, session['code'])
+    boardText = boardText+","
+    print("******************************")
+    print(boardText)
+    print("******************************")
+    print("==============================")
+    for code in lista:
+        aux = str(code).replace("(", "")
+        aux = str(aux).replace(")", "")
+        aux = str(aux).replace(",", "")
+        result =  board_disponible(aux, boardText, control.move_id(aux))
+        if str(result)!="nada":
+            print(result)
+    print("==============================")
+
+
+def board_disponible(code, boardText, lista):
+    cont = 0
+    posible = ""
+    for board in lista:
+        aux = str(board).replace("(", "")
+        aux = str(aux).replace(")", "")
+        aux = str(aux).replace("'", "")
+        aux = str(aux).replace(", ", "")
+        if(cont==1):
+            return aux
+        if(aux==boardText):
+            cont = 1
+    return "nada"
+
 @socketio.on('message')
 def handle_message(msg):
     board = msg.split('-')
     control.update_board(session['code'], board[0])
     control.update_pass(session['code'], board[2])
-    control.add_move(session['code'], board[0])
     game = control.get_game(session['code'])
+    control.add_move(session['code'], board[0], machineboard.total_moves(control.is_player1(
+        session['code'], session['id']), control.get_game_moves(session['code']), game[2]))
     try:
         player2 = control.get_user_id(game[4])
         if control.is_player1(session['code'], session['id']) and player2[1].split('=')[0] == 'machine':
-            move = machineboard.generate_move(game[2], game[6], 1)
+            compare_move(game[2])
+            move = machineboard.generate_move(
+                session['code'], game[2], game[6], 1).split("-")
+            control.add_move(session['code'], move[1], machineboard.total_moves(control.is_player1(
+                session['code'], session['id']), control.get_game_moves(session['code']), game[2]))
             send(game[2]+"-"+board[1]+'-'+str(session['code']) +
-                 "-"+player2[1]+"-"+str(game[5])+"-"+move, broadcast=True)
+                 "-"+player2[1]+"-"+str(game[5])+"-"+move[0], broadcast=True)
         else:
             send(game[2]+"-"+board[1]+'-'+str(session['code']) +
                  "-"+player2[1]+"-"+str(game[5])+"-user", broadcast=True)

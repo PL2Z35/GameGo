@@ -26,6 +26,7 @@ create table move(
     id int not null auto_increment,
     id_code int not null,
     board varchar(1000),
+    type varchar(20),
     primary key(id)
 )
 

@@ -89,7 +89,8 @@ window.onload = function () {
                     clicks = 0;
                     document.getElementById('play').disabled = true
                     document.getElementById('pass').disabled = false
-                } else { //Valid move
+                } else {
+                    document.getElementById("traceability").value+=document.getElementById("played").innerHTML+" en ["+x+"-"+y+"]\n";
                     historyBoards.push(JSON.parse(JSON.stringify(backupBoard.slice(0))));
                     copyBoard(backupBoard, board);
                     copyBoard(board, testBoard);
@@ -163,12 +164,13 @@ window.onload = function () {
         let code = document.getElementById('code').innerHTML;
         let cont = msg.split('-');
         if (code == cont[2]) {
-            console.log(msg);
+            console.log(msg)
             if (cont[5] == "user") {
                 playclick(cont, 0);
             }
             if (cont[5] != "user") {
                 let aux = cont[5].split('=');
+                document.getElementById("traceability").value+="Juega: "+cont[3]+" en ["+aux[0]+"-"+aux[1]+"]\n";
                 let x = parseInt(aux[0]);
                 let y = parseInt(aux[1]);
                 testBoard[x][y] = player;
@@ -201,7 +203,6 @@ window.onload = function () {
         document.getElementById('pointsPlayer2').innerHTML = '(' + document.getElementById('player2').innerHTML + '): ' + countPoints(1);
         if (opc == 0) {
             player = parseInt(cont[1]);
-            document.getElementById('play').disabled = true
             if (player == 0) {
                 document.getElementById('played').innerHTML = "Juega:" + document.getElementById('player1').innerHTML;
                 if (document.getElementById('player').innerHTML == ("Player: " + document.getElementById('player1').innerHTML)) {
@@ -386,6 +387,10 @@ function invalidMove(x, y) {
     }
     resetCheckBoard();
     return false;
+}
+
+function repeatMove(x, y) {
+    return testBoard[x][y] != -1;
 }
 
 //Check valid position
